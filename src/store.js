@@ -27,17 +27,47 @@ const defaultState = {
       completed: false,
       text: 'Optional: add tests'
     }
-  ]
+  ],
+
+  categoryList: {
+    general: [
+      {
+        id: 1,
+        completed: false,
+        text: 'Read README'
+      },
+      {
+        id: 2,
+        completed: false,
+        text: 'Add one todo'
+      },
+      {
+        id: 3,
+        completed: false,
+        text: 'Add filters'
+      },
+      {
+        id: 4,
+        completed: false,
+        text: 'Add multiple lists'
+      },
+      {
+        id: 5,
+        completed: false,
+        text: 'Optional: add tests'
+      }
+    ]
+  }
 }
 
 class TodosContainer extends Container {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = this.readStorage()
   }
 
-  readStorage () {
+  readStorage() {
     if (window && window.localStorage) {
       const state = window.localStorage.getItem('appState')
       if (state) {
@@ -48,15 +78,19 @@ class TodosContainer extends Container {
     return defaultState
   }
 
-  syncStorage () {
+  syncStorage() {
     if (window && window.localStorage) {
       const state = JSON.stringify(this.state)
       window.localStorage.setItem('appState', state)
     }
   }
 
-  getList () {
+  getList() {
     return this.state.list
+  }
+
+  getCategoryList(categoryName) {
+    return this.state.categoryList[categoryName];
   }
 
   toggleComplete = async id => {
@@ -79,6 +113,24 @@ class TodosContainer extends Container {
     this.syncStorage()
   }
 
+  toggleComplete1 = async (categoryName, id) => {
+    const item = this.state.categoryList[categoryName].find(i => i.id === id);
+    const completed = !item.completed
+
+    await this.setState(state => {
+      const list = state.categoryList[categoryName].map(item => {
+        if (item.id !== id) return item
+        return {
+          ...item,
+          completed
+        };
+      });
+      return { ...state.categoryList, categoryName: list };
+    });
+
+    this.syncStorage();
+  }
+
   createTodo = async text => {
     await this.setState(state => {
       const item = {
@@ -92,6 +144,28 @@ class TodosContainer extends Container {
     })
 
     this.syncStorage()
+  }
+
+  createTodo1 = async (categoryName, text) => {
+    console.log(categoryName, text);
+    await this.setState(state => {
+      const item = {
+        completed: false,
+        text,
+        id: state.categoryList[categoryName].length + 1
+      }
+      console.log(item);
+
+      const list = state.categoryList[categoryName].concat(item);
+      console.log(list);
+      let retState = { ...state };
+      retState.categoryList[categoryName] = list;
+      console.log(retState);
+      return retState;
+      // return { ...state.categoryList, categoryName: list };
+    });
+
+    this.syncStorage();
   }
 }
 
