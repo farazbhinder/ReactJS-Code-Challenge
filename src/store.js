@@ -125,26 +125,6 @@ class TodosContainer extends Container {
     return this.state.filteredList;
   }
 
-  toggleComplete = async id => {
-    const item = this.state.list.find(i => i.id === id);
-    const completed = !item.completed;
-
-    // We're using await on setState here because this comes from unstated package, not React
-    // See: https://github.com/jamiebuilds/unstated#introducing-unstated
-    await this.setState(state => {
-      const list = state.list.map(item => {
-        if (item.id !== id) return item;
-        return {
-          ...item,
-          completed
-        };
-      });
-      return { list };
-    });
-
-    this.syncStorage();
-  };
-
   toggleComplete1 = async (categoryName, id) => {
     const item = this.state.categoryList[categoryName].find(i => i.id === id);
     const completed = !item.completed;
@@ -162,21 +142,6 @@ class TodosContainer extends Container {
       console.log("retState", retState);
       this.filterTodoList1(categoryName, this.state.selectedFilter); // refresh the filtered list right away
       return retState;
-    });
-
-    this.syncStorage();
-  };
-
-  createTodo = async text => {
-    await this.setState(state => {
-      const item = {
-        completed: false,
-        text,
-        id: state.list.length + 1
-      };
-
-      const list = state.list.concat(item);
-      return { list };
     });
 
     this.syncStorage();
