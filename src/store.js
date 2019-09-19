@@ -29,6 +29,8 @@ const defaultState = {
     }
   ],
 
+  selectedCategory: "",
+
   categoryList: {
     general: [
       {
@@ -93,6 +95,12 @@ class TodosContainer extends Container {
     return this.state.categoryList[categoryName];
   }
 
+  getAllCategories() {
+    let sortedCategoriesArr = Object.keys(this.state.categoryList).sort();
+    let categoriesWithKeys = sortedCategoriesArr.map((category, idx) => { return { id: idx, text: category }; });
+    return categoriesWithKeys;
+  }
+
   toggleComplete = async id => {
     const item = this.state.list.find(i => i.id === id)
     const completed = !item.completed
@@ -119,13 +127,16 @@ class TodosContainer extends Container {
 
     await this.setState(state => {
       const list = state.categoryList[categoryName].map(item => {
-        if (item.id !== id) return item
+        if (item.id !== id) return item;
         return {
           ...item,
           completed
         };
       });
-      return { ...state.categoryList, categoryName: list };
+      let retState = { ...state };
+      retState.categoryList[categoryName] = list;
+      console.log(retState);
+      return retState;
     });
 
     this.syncStorage();
@@ -165,6 +176,16 @@ class TodosContainer extends Container {
       // return { ...state.categoryList, categoryName: list };
     });
 
+    this.syncStorage();
+  }
+
+  categoryClick1 = async (text) => {
+    console.log("categoryClick1 text param", text);
+    await this.setState(state => {
+      let retState = { ...state };
+      retState.selectedCategory = text;
+      return retState;
+    });
     this.syncStorage();
   }
 }
