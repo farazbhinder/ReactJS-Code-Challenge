@@ -1,31 +1,31 @@
-import { Container } from 'unstated'
+import { Container } from "unstated";
 
 const defaultState = {
   list: [
     {
       id: 1,
       completed: false,
-      text: 'Read README'
+      text: "Read README"
     },
     {
       id: 2,
       completed: false,
-      text: 'Add one todo'
+      text: "Add one todo"
     },
     {
       id: 3,
       completed: false,
-      text: 'Add filters'
+      text: "Add filters"
     },
     {
       id: 4,
       completed: false,
-      text: 'Add multiple lists'
+      text: "Add multiple lists"
     },
     {
       id: 5,
       completed: false,
-      text: 'Optional: add tests'
+      text: "Optional: add tests"
     }
   ],
 
@@ -36,59 +36,59 @@ const defaultState = {
       {
         id: 1,
         completed: false,
-        text: 'Read README'
+        text: "Read README"
       },
       {
         id: 2,
         completed: false,
-        text: 'Add one todo'
+        text: "Add one todo"
       },
       {
         id: 3,
         completed: false,
-        text: 'Add filters'
+        text: "Add filters"
       },
       {
         id: 4,
         completed: false,
-        text: 'Add multiple lists'
+        text: "Add multiple lists"
       },
       {
         id: 5,
         completed: false,
-        text: 'Optional: add tests'
+        text: "Optional: add tests"
       }
     ]
   }
-}
+};
 
 class TodosContainer extends Container {
   constructor(props) {
-    super(props)
+    super(props);
 
-    this.state = this.readStorage()
+    this.state = this.readStorage();
   }
 
   readStorage() {
     if (window && window.localStorage) {
-      const state = window.localStorage.getItem('appState')
+      const state = window.localStorage.getItem("appState");
       if (state) {
-        return JSON.parse(state)
+        return JSON.parse(state);
       }
     }
 
-    return defaultState
+    return defaultState;
   }
 
   syncStorage() {
     if (window && window.localStorage) {
-      const state = JSON.stringify(this.state)
-      window.localStorage.setItem('appState', state)
+      const state = JSON.stringify(this.state);
+      window.localStorage.setItem("appState", state);
     }
   }
 
   getList() {
-    return this.state.list
+    return this.state.list;
   }
 
   getCategoryList(categoryName) {
@@ -97,33 +97,39 @@ class TodosContainer extends Container {
 
   getAllCategories() {
     let sortedCategoriesArr = Object.keys(this.state.categoryList).sort();
-    let categoriesWithKeys = sortedCategoriesArr.map((category, idx) => { return { id: idx, text: category }; });
+    let categoriesWithKeys = sortedCategoriesArr.map((category, idx) => {
+      return { id: idx, text: category };
+    });
     return categoriesWithKeys;
   }
 
+  getSelectedCategory() {
+    return this.state.selectedCategory;
+  }
+
   toggleComplete = async id => {
-    const item = this.state.list.find(i => i.id === id)
-    const completed = !item.completed
+    const item = this.state.list.find(i => i.id === id);
+    const completed = !item.completed;
 
     // We're using await on setState here because this comes from unstated package, not React
     // See: https://github.com/jamiebuilds/unstated#introducing-unstated
     await this.setState(state => {
       const list = state.list.map(item => {
-        if (item.id !== id) return item
+        if (item.id !== id) return item;
         return {
           ...item,
           completed
-        }
-      })
-      return { list }
-    })
+        };
+      });
+      return { list };
+    });
 
-    this.syncStorage()
-  }
+    this.syncStorage();
+  };
 
   toggleComplete1 = async (categoryName, id) => {
     const item = this.state.categoryList[categoryName].find(i => i.id === id);
-    const completed = !item.completed
+    const completed = !item.completed;
 
     await this.setState(state => {
       const list = state.categoryList[categoryName].map(item => {
@@ -140,7 +146,7 @@ class TodosContainer extends Container {
     });
 
     this.syncStorage();
-  }
+  };
 
   createTodo = async text => {
     await this.setState(state => {
@@ -148,14 +154,14 @@ class TodosContainer extends Container {
         completed: false,
         text,
         id: state.list.length + 1
-      }
+      };
 
-      const list = state.list.concat(item)
-      return { list }
-    })
+      const list = state.list.concat(item);
+      return { list };
+    });
 
-    this.syncStorage()
-  }
+    this.syncStorage();
+  };
 
   createTodo1 = async (categoryName, text) => {
     console.log(categoryName, text);
@@ -164,7 +170,7 @@ class TodosContainer extends Container {
         completed: false,
         text,
         id: state.categoryList[categoryName].length + 1
-      }
+      };
       console.log(item);
 
       const list = state.categoryList[categoryName].concat(item);
@@ -177,9 +183,9 @@ class TodosContainer extends Container {
     });
 
     this.syncStorage();
-  }
+  };
 
-  categoryClick1 = async (text) => {
+  categoryClick1 = async text => {
     console.log("categoryClick1 text param", text);
     await this.setState(state => {
       let retState = { ...state };
@@ -187,7 +193,19 @@ class TodosContainer extends Container {
       return retState;
     });
     this.syncStorage();
-  }
+  };
+
+  createCategory1 = async categoryName => {
+    if (categoryName in this.state.categoryList) {
+      throw new Error("category already exists");
+    }
+    await this.setState(state => {
+      let retState = { ...state };
+      retState.categoryList[categoryName] = [];
+      return retState;
+    });
+    this.syncStorage();
+  };
 }
 
-export default TodosContainer
+export default TodosContainer;
