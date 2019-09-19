@@ -37,6 +37,7 @@ The first thing I did was to try to understand the structure of the project, it 
 2. Then I just changed the store.js functions you had already provided me with, i.e., toggleComplete and createTodo so that the functions do the same functionality with the new list dictionary I created (categoryList) instead of older one (list). 
 3. Next step was to just simply replicate the already given components and create new components for creation of new lists. The code of new components to create new lists is pretty similar to the provided components to create todos. Q2 was complete now.
 4. Upon moving to Q1, I thought its solution in such a way that another state list should be maintained that represents the filteredList. So I created a new state variable for it, and upon clicking the radio boxes for filtering this state variable of filteredList was updated. Moreover, if some change like toggleTodo was done on a tab other than all it should also show changes to todoItem so I refreshed the filtered list right away after any change to todo item.
+5. Finally I added some tests for store.js.
 
 #### P.S.  
 1. As I used a dictionary structure for saving new lists, so if same list is added second time it throws an error. Refreshing browser page will display the application page again. 
