@@ -13,7 +13,7 @@ const AddCategory = ({ onAddCategory }) => {
     <Input
       type="text"
       onKeyPress={handleKeyPress}
-      placeholder="Add new category..."
+      placeholder="Create new list..."
     />
   );
 };
