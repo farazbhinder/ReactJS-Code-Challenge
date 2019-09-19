@@ -30,6 +30,9 @@ const defaultState = {
   ],
 
   selectedCategory: "general",
+  selectedFilter: "all",
+
+  filteredList: [],
 
   categoryList: {
     general: [
@@ -107,6 +110,16 @@ class TodosContainer extends Container {
     return this.state.selectedCategory;
   }
 
+  getSelectedFilter() {
+    console.log("this.state.selectedFilter;", this.state.selectedFilter);
+    return this.state.selectedFilter;
+  }
+
+  getFilteredList() {
+    console.log("this.state.filteredList;", this.state.filteredList);
+    return this.state.filteredList;
+  }
+
   toggleComplete = async id => {
     const item = this.state.list.find(i => i.id === id);
     const completed = !item.completed;
@@ -142,6 +155,7 @@ class TodosContainer extends Container {
       let retState = { ...state };
       retState.categoryList[categoryName] = list;
       console.log("retState", retState);
+      this.filterTodoList1(categoryName, this.state.selectedFilter); // refresh the filtered list right away
       return retState;
     });
 
@@ -178,6 +192,7 @@ class TodosContainer extends Container {
       let retState = { ...state };
       retState.categoryList[categoryName] = list;
       console.log(retState);
+      this.filterTodoList1(categoryName, this.state.selectedFilter); // refresh the filtered list right away
       return retState;
       // return { ...state.categoryList, categoryName: list };
     });
@@ -192,16 +207,43 @@ class TodosContainer extends Container {
       retState.selectedCategory = text;
       return retState;
     });
+    this.filterTodoList1(text, this.state.selectedFilter); // refresh the filtered list right away
     this.syncStorage();
   };
 
   createCategory1 = async categoryName => {
     if (categoryName in this.state.categoryList) {
-      throw new Error("category already exists");
+      throw new Error("category already exists - press F5");
     }
     await this.setState(state => {
       let retState = { ...state };
       retState.categoryList[categoryName] = [];
+      return retState;
+    });
+    this.syncStorage();
+  };
+
+  filterTodoList1 = async (categoryName, option) => {
+    console.log("optiooooooooooon", option);
+    var filteredList1;
+    if (option === "completed") {
+      filteredList1 = this.state.categoryList[categoryName].filter(
+        i => i.completed === true
+      );
+    } else if (option === "active") {
+      filteredList1 = this.state.categoryList[categoryName].filter(
+        i => i.completed === false
+      );
+    } else if (option === "all") {
+      filteredList1 = this.state.categoryList[categoryName];
+    } else {
+      throw new Error("invalid filter option - press F5");
+    }
+    console.log("filteredList1", filteredList1);
+    await this.setState(state => {
+      let retState = { ...state };
+      retState.filteredList = filteredList1;
+      retState.selectedFilter = option;
       return retState;
     });
     this.syncStorage();

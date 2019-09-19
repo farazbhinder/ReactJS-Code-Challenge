@@ -11,6 +11,8 @@ import AddTodo from "./components/AddTodo";
 import AddCategory from "./components/AddCategory";
 import CategoryList from "./components/CategoryList";
 
+import FilterTodoList from "./components/FilterTodoList";
+
 function App() {
   return (
     <Provider>
@@ -21,7 +23,13 @@ function App() {
             console.log("allCategories", allCategories);
             // const list = todos.getList()
             const selectedCategory = todos.getSelectedCategory();
-            const list = todos.getCategoryList(selectedCategory);
+            let list = todos.getCategoryList(selectedCategory);
+            const list1 = todos.getCategoryList(selectedCategory);
+            const selectedFilter = todos.getSelectedFilter();
+            const filteredList = todos.getFilteredList();
+            if (list1.length !== filteredList.length) {
+              list = filteredList;
+            }
             return (
               <TodosWrapper>
                 <AddCategory onAddCategory={todos.createCategory1} />
@@ -30,6 +38,12 @@ function App() {
                   selectedCategory={selectedCategory}
                   categoryClick={todos.categoryClick1}
                 />
+
+                <FilterTodoList
+                  onChangeFilter={todos.filterTodoList1}
+                  selectedCategory={selectedCategory}
+                />
+
                 <AddTodo
                   selectedCategory={selectedCategory}
                   onAddTodo={todos.createTodo1}
@@ -47,30 +61,6 @@ function App() {
     </Provider>
   );
 }
-
-const FlexButton = styled.h1`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  display: block;
-`;
-
-const LeftPane = styled.div`
-  background-color: #282b23;
-  height: 100vh;
-  min-width: 20vw;
-  align-items: center;
-  overflow-y: auto;
-  float: left;
-  align-items: center;
-  justify-content: flex-start;
-  font-size: 24px;
-  color: white;
-
-  display: flex;
-  flex-direction: column;
-`;
 
 const Wrapper = styled.div`
   background-color: #282c34;
