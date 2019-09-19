@@ -29,7 +29,7 @@ const defaultState = {
     }
   ],
 
-  selectedCategory: "",
+  selectedCategory: "general",
 
   categoryList: {
     general: [
@@ -141,7 +141,7 @@ class TodosContainer extends Container {
       });
       let retState = { ...state };
       retState.categoryList[categoryName] = list;
-      console.log(retState);
+      console.log("retState", retState);
       return retState;
     });
 

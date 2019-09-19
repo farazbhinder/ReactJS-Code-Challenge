@@ -33,7 +33,11 @@ function App() {
                   selectedCategory={selectedCategory}
                   onAddTodo={todos.createTodo1}
                 />
-                <TodoList items={list} toggleComplete={todos.toggleComplete1} />
+                <TodoList
+                  items={list}
+                  selectedCategory={selectedCategory}
+                  toggleComplete={todos.toggleComplete1}
+                />
               </TodosWrapper>
             );
           }}
