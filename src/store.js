@@ -94,11 +94,16 @@ class TodosContainer extends Container {
     return this.state.list;
   }
 
+  getCategoryListFull() {
+    return this.state.categoryList;
+  }
+
   getCategoryList(categoryName) {
     return this.state.categoryList[categoryName];
   }
 
   getAllCategories() {
+    // return categories with their indexes - indexes are obtained by sorting the keys of categories
     let sortedCategoriesArr = Object.keys(this.state.categoryList).sort();
     let categoriesWithKeys = sortedCategoriesArr.map((category, idx) => {
       return { id: idx, text: category };
