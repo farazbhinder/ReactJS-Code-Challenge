@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import CategoryItem from "./CategoryItem";
 
-const CategoryList = ({ items, categoryClick }) => (
+const CategoryList = ({ items, selectedCategory, categoryClick }) => (
   <LeftPane>
     {console.log("items.map", items)}
     {items.map(item => {
@@ -15,6 +15,7 @@ const CategoryList = ({ items, categoryClick }) => (
       return (
         <CategoryItem
           key={item.id}
+          selectedCategory={selectedCategory}
           {...item}
           onCategoryClick={onCategoryClick}
         />

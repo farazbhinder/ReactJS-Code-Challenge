@@ -27,6 +27,7 @@ function App() {
                 <AddCategory onAddCategory={todos.createCategory1} />
                 <CategoryList
                   items={allCategories}
+                  selectedCategory={selectedCategory}
                   categoryClick={todos.categoryClick1}
                 />
                 <AddTodo
